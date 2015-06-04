@@ -109,21 +109,6 @@ diffPO &lt;- outer(xPred, xObs,  f)</code></pre>
         getC = function() { returnType(double(2)); return(C[, ]) }
     )
 )</code></pre>
-<pre><code>## Warning: class &quot;envRefClass&quot; is defined (with package slot 'methods') but
-## no metadata object found to revise subclass information---not exported?
-## Making a copy in package '.GlobalEnv'</code></pre>
-<pre><code>## Warning: class &quot;.environment&quot; is defined (with package slot 'methods') but
-## no metadata object found to revise subclass information---not exported?
-## Making a copy in package '.GlobalEnv'</code></pre>
-<pre><code>## Warning: class &quot;refClass&quot; is defined (with package slot 'methods') but no
-## metadata object found to revise subclass information---not exported?
-## Making a copy in package '.GlobalEnv'</code></pre>
-<pre><code>## Warning: class &quot;environment&quot; is defined (with package slot 'methods') but
-## no metadata object found to revise subclass information---not exported?
-## Making a copy in package '.GlobalEnv'</code></pre>
-<pre><code>## Warning: class &quot;refObject&quot; is defined (with package slot 'methods') but no
-## metadata object found to revise subclass information---not exported?
-## Making a copy in package '.GlobalEnv'</code></pre>
 </div>
 <div id="gp-model" class="section level3">
 <h3>GP model</h3>
@@ -180,7 +165,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.748   0.013   1.761</code></pre>
+##   1.750   0.012   1.763</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -189,7 +174,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.201   0.001   1.201</code></pre>
+##   1.211   0.000   1.212</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()

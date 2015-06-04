@@ -32,7 +32,7 @@ diffPO <- outer(xPred, xObs,  f)
 
 ##It takes the MCMC samples as a *runtime* argument, so this can be iterated with running the MCMC for different lengths, initial values, or even different datasets!
 
-##```{r}
+##```{r, warning=FALSE}
 gpPred <- nimbleFunction(
     setup = function(model, params) {
         calcNodes <- model$getDependencies(params, determOnly = TRUE)
