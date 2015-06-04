@@ -154,7 +154,7 @@ diag(C)
 ##```
 
 
-##```{r echo=FALSE fig.width 4 fig.height 4}
+##```{r echo=FALSE fig.width=4 fig.height=4}
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=19, col='red')
 ####segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
