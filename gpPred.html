@@ -131,8 +131,6 @@ data &lt;- list(yObs = yObs)
 inits &lt;- list(rho = 1, sigGP = 1, sigOE = 1)
 
 Rmodel &lt;- nimbleModel(code, constants, data, inits)</code></pre>
-<pre><code>## Loading required package: igraph
-## Loading required package: methods</code></pre>
 </div>
 <div id="create-compile-and-run" class="section level3">
 <h3>Create, compile, and run</h3>
@@ -166,7 +164,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.764   0.013   1.777</code></pre>
+##   1.711   0.012   1.723</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -175,7 +173,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.195   0.001   1.196</code></pre>
+##   1.213   0.001   1.214</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()

@@ -75,7 +75,7 @@ gpPred <- nimbleFunction(
 ##- There's an efficiency hit to the MCMC sampling, but it doesn't seem too bad.  
 ##- This works.  
 
-##```{r}
+##```{r, message=FALSE}
 code <- nimbleCode({
    rho ~ dgamma(10, 1)
    sigGP ~ dunif(0, 1e5)
