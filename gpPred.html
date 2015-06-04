@@ -127,7 +127,9 @@ diffPO &lt;- outer(xPred, xObs,  f)</code></pre>
 
 constants &lt;- list(nObs=nObs, nPred=nPred, diffOO=diffOO, diffPP=diffPP, diffPO=diffPO,
                   IOO=diag(nObs), IPP=diag(nPred), mu=rep(0,nObs))
+
 data &lt;- list(yObs = yObs)
+
 inits &lt;- list(rho = 1, sigGP = 1, sigOE = 1)
 
 Rmodel &lt;- nimbleModel(code, constants, data, inits)</code></pre>
@@ -146,9 +148,8 @@ params &lt;- Rmodel$getNodeNames(topOnly = TRUE)
 ## spec$addSampler('RW_block', control = list(targetNodes = params))
 spec$addSampler(params, 'RW_block')</code></pre>
 <pre><code>## [1] RW_block sampler: rho, sigGP, sigOE,  adaptive: TRUE,  adaptScaleOnly: FALSE,  adaptInterval: 200,  scale: 1,  propCov: identity</code></pre>
-<pre class="r"><code>## We can debate about univariate vs. block sampling at some point
-
-## MCMC function
+<p>We can debate about univariate vs. block sampling at some point.</p>
+<pre class="r"><code>## MCMC function
 Rmcmc &lt;- buildMCMC(spec)
 
 ## GP prediction function
@@ -164,7 +165,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.711   0.012   1.723</code></pre>
+##   1.719   0.013   1.733</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -173,7 +174,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.213   0.001   1.214</code></pre>
+##   1.194   0.001   1.195</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()

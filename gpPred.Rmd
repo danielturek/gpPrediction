@@ -88,7 +88,9 @@ code <- nimbleCode({
 
 constants <- list(nObs=nObs, nPred=nPred, diffOO=diffOO, diffPP=diffPP, diffPO=diffPO,
                   IOO=diag(nObs), IPP=diag(nPred), mu=rep(0,nObs))
+
 data <- list(yObs = yObs)
+
 inits <- list(rho = 1, sigGP = 1, sigOE = 1)
 
 Rmodel <- nimbleModel(code, constants, data, inits)
@@ -97,7 +99,7 @@ Rmodel <- nimbleModel(code, constants, data, inits)
 
 ### Create, compile, and run
 
-```{r}
+```{r, message=FALSE}
 
 ## MCMC specification with no samplers
 spec <- configureMCMC(Rmodel, nodes = NULL)
@@ -110,9 +112,11 @@ params <- Rmodel$getNodeNames(topOnly = TRUE)
 ## otherwise, using last public release of NIMBLE (0.3-1), use this line instead:
 ## spec$addSampler('RW_block', control = list(targetNodes = params))
 spec$addSampler(params, 'RW_block')
+```
 
-## We can debate about univariate vs. block sampling at some point
+We can debate about univariate vs. block sampling at some point.
 
+```{r, message=FALSE}
 ## MCMC function
 Rmcmc <- buildMCMC(spec)
 
