@@ -5,7 +5,7 @@
 
 ##### Setup
 
-##```{r echo=FALSE}
+##```{r message=FALSE}
 library(nimble)
 ##```
 

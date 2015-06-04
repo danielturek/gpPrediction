@@ -63,12 +63,7 @@ img {
 
 <div id="setup" class="section level3">
 <h3>Setup</h3>
-<pre><code>## 
-## Attaching package: 'nimble'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     simulate</code></pre>
+<pre class="r"><code>library(nimble)</code></pre>
 <p>The first three lines are the only inputs required.</p>
 <pre class="r"><code>xObs &lt;- c( 1,  3,  5,  7, 10, 15, 20)    ## input
 yObs &lt;- c(10, 15, 18, 14, 20, 13, 19)    ## input
@@ -185,7 +180,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.780   0.013   1.793</code></pre>
+##   1.748   0.013   1.761</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -194,7 +189,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.206   0.001   1.206</code></pre>
+##   1.201   0.001   1.201</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()
