@@ -158,6 +158,9 @@ E
 diag(C)
 ##```
 
+##Black dots are the original 'xObs' and 'yObs'
+
+##Red dots are the predictions made at each 'xPred'
 
 ##```{r echo=FALSE, fig.width=6, fig.height=6}
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
