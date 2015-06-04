@@ -27,7 +27,7 @@ gpPred <- nimbleFunction(
             values(model, params) <<- samples[i,]
             calculate(model, calcNodes)
             intermediate <- model$SigPO %*% inverse(model$SigOO)
-            Etemp <-               intermediate %*% model$yObs
+            Etemp <-               intermediate %*% asCol(model$yObs)
             Ctemp <- model$SigPP - intermediate %*% t(model$SigPO)
             E <<- E + Etemp
             C <<- C + Ctemp
@@ -86,14 +86,10 @@ diag(C)
 
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=19, col='red')
-
+segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
 
 ## wield this new weapon carefully!
 ## happy to discuss data & applications anytime.
-
-
-
-
 
 
 
