@@ -48,7 +48,7 @@ gpPred <- nimbleFunction(
             values(model, params) <<- samples[i,]
             calculate(model, calcNodes)
             intermediate <- model$SigPO %*% inverse(model$SigOO)
-            Etemp <-               intermediate %*% asCol(model$yObs)
+            Etemp <- intermediate %*% asCol(model$yObs)
             Ctemp <- model$SigPP - intermediate %*% t(model$SigPO)
             E <<- E + Etemp
             C <<- C + Ctemp
@@ -70,10 +70,10 @@ gpPred <- nimbleFunction(
 
 ##This is *not* as elegant as I had hoped.  It still requires repeating (essentially) the same code three times.  I discovered some limitations of NIMBLE while trying other approaches.
 
-##Bottom line:
-##- This achieves relatively nice simplicity.
-##- There's an efficiency hit to the MCMC sampling, but it doesn't seem too bad.
-##- This works.
+##Bottom line:  
+##- This achieves relatively nice simplicity.  
+##- There's an efficiency hit to the MCMC sampling, but it doesn't seem too bad.  
+##- This works.  
 
 ##```{r}
 code <- nimbleCode({

@@ -96,7 +96,7 @@ diffPO &lt;- outer(xPred, xObs,  f)</code></pre>
             values(model, params) &lt;&lt;- samples[i,]
             calculate(model, calcNodes)
             intermediate &lt;- model$SigPO %*% inverse(model$SigOO)
-            Etemp &lt;-               intermediate %*% asCol(model$yObs)
+            Etemp &lt;- intermediate %*% asCol(model$yObs)
             Ctemp &lt;- model$SigPP - intermediate %*% t(model$SigPO)
             E &lt;&lt;- E + Etemp
             C &lt;&lt;- C + Ctemp
@@ -114,7 +114,7 @@ diffPO &lt;- outer(xPred, xObs,  f)</code></pre>
 <h3>GP model</h3>
 <p>GP model defined here. Basically the same as your original, but I renamed some paramters more to my liking =)</p>
 <p>This is <em>not</em> as elegant as I had hoped. It still requires repeating (essentially) the same code three times. I discovered some limitations of NIMBLE while trying other approaches.</p>
-<p>Bottom line: - This achieves relatively nice simplicity. - There’s an efficiency hit to the MCMC sampling, but it doesn’t seem too bad. - This works.</p>
+<p>Bottom line:<br />- This achieves relatively nice simplicity.<br />- There’s an efficiency hit to the MCMC sampling, but it doesn’t seem too bad.<br />- This works.</p>
 <pre class="r"><code>code &lt;- nimbleCode({
    rho ~ dgamma(10, 1)
    sigGP ~ dunif(0, 1e5)
@@ -165,7 +165,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.752   0.013   1.764</code></pre>
+##   1.777   0.012   1.789</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -174,7 +174,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.218   0.002   1.220</code></pre>
+##   1.201   0.001   1.201</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()
