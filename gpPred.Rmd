@@ -80,13 +80,14 @@ code <- nimbleCode({
    rho ~ dgamma(10, 1)
    sigGP ~ dunif(0, 1e5)
    sigOE ~ dunif(0, 1e5)
-   SigOO[1:nObs, 1:nObs ] <- sigGP^2 * exp(-1/2 * diffOO[1:nObs, 1:nObs ] / rho^2) + sigOE^2 * IOO[1:nObs, 1:nObs ]
-   SigPP[1:nPred,1:nPred] <- sigGP^2 * exp(-1/2 * diffPP[1:nPred,1:nPred] / rho^2) + sigOE^2 * IPP[1:nPred,1:nPred]
-   SigPO[1:nPred,1:nObs ] <- sigGP^2 * exp(-1/2 * diffPO[1:nPred,1:nObs ] / rho^2)
+   SigOO[1:nObs, 1:nObs ] <- sigGP^2*exp(-1/2*diffOO[1:nObs, 1:nObs ]/rho^2) + sigOE^2*IOO[1:nObs, 1:nObs ]
+   SigPP[1:nPred,1:nPred] <- sigGP^2*exp(-1/2*diffPP[1:nPred,1:nPred]/rho^2) + sigOE^2*IPP[1:nPred,1:nPred]
+   SigPO[1:nPred,1:nObs ] <- sigGP^2*exp(-1/2*diffPO[1:nPred,1:nObs ]/rho^2)
    yObs[1:nObs] ~ dmnorm(mu[1:nObs], cov = SigOO[1:nObs,1:nObs])
 })
 
-constants <- list(nObs=nObs, nPred=nPred, diffOO=diffOO, diffPP=diffPP, diffPO=diffPO, IOO=diag(nObs), IPP=diag(nPred), mu=rep(0,nObs))
+constants <- list(nObs=nObs, nPred=nPred, diffOO=diffOO, diffPP=diffPP, diffPO=diffPO,
+                  IOO=diag(nObs), IPP=diag(nPred), mu=rep(0,nObs))
 data <- list(yObs = yObs)
 inits <- list(rho = 1, sigGP = 1, sigOE = 1)
 
@@ -154,7 +155,7 @@ diag(C)
 ```
 
 
-```{r echo=FALSE, fig.width=4, fig.height=4}
+```{r echo=FALSE, fig.width=6, fig.height=6}
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=19, col='red')
 ##segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
