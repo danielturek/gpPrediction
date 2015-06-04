@@ -80,7 +80,7 @@ diffPO &lt;- outer(xPred, xObs,  f)</code></pre>
 <div id="nimble-function-for-gp-prediction" class="section level3">
 <h3>NIMBLE function for GP prediction</h3>
 <p>Here’s the main function for doing the prediction from the GP model.</p>
-<p>It takes the MCMC samples as a <em>runtime</em> argument, so this can be iterated with running the MCMC for different lengths, initial values, or even different datasets!</p>
+<p>It takes the MCMC samples as a <em>runtime</em> argument, so this can be iterated with running the MCMC for different numbers of iterations, initial values, or even different datasets!</p>
 <pre class="r"><code>gpPred &lt;- nimbleFunction(
     setup = function(model, params) {
         calcNodes &lt;- model$getDependencies(params, determOnly = TRUE)
@@ -165,7 +165,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 set.seed(0)
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.750   0.012   1.763</code></pre>
+##   1.752   0.013   1.764</code></pre>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -174,7 +174,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##   1.211   0.000   1.212</code></pre>
+##   1.218   0.002   1.220</code></pre>
 <pre class="r"><code>## extract predictions
 ## E and C self-explanatory
 E &lt;- Cpred$getE()

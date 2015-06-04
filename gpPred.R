@@ -30,7 +30,7 @@ diffPO <- outer(xPred, xObs,  f)
 
 ##Here's the main function for doing the prediction from the GP model.
 
-##It takes the MCMC samples as a *runtime* argument, so this can be iterated with running the MCMC for different lengths, initial values, or even different datasets!
+##It takes the MCMC samples as a *runtime* argument, so this can be iterated with running the MCMC for different numbers of iterations, initial values, or even different datasets!
 
 ##```{r, warning=FALSE}
 gpPred <- nimbleFunction(
