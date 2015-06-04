@@ -1,38 +1,38 @@
-##---
-##publish: true
-##---
+---
+publish: true
+---
 
 
-##### Setup
+### Setup
 
-##```{r echo=FALSE}
+```{r echo=FALSE}
 library(nimble)
-##```
+```
 
-##The first three lines are the only inputs required.
+The first three lines are the only inputs required.
 
-##```{r}
+```{r}
 xObs <- c( 1,  3,  5,  7, 10, 15, 20)    ## input
 yObs <- c(10, 15, 18, 14, 20, 13, 19)    ## input
 xPred <- 1:20                            ## input
 
-#### some processing
+## some processing
 nObs <- length(xObs)
 nPred <- length(xPred)
 f <- function(xi, xj) (xi-xj)^2
 diffOO <- outer(xObs,  xObs,  f)
 diffPP <- outer(xPred, xPred, f)
 diffPO <- outer(xPred, xObs,  f)
-##```
+```
 
 
-##### NIMBLE function for GP prediction
+### NIMBLE function for GP prediction
 
-##Here's the main function for doing the prediction from the GP model.
+Here's the main function for doing the prediction from the GP model.
 
-##It takes the MCMC samples as a *runtime* argument, so this can be iterated with running the MCMC for different lengths, initial values, or even different datasets!
+It takes the MCMC samples as a *runtime* argument, so this can be iterated with running the MCMC for different lengths, initial values, or even different datasets!
 
-##```{r}
+```{r}
 gpPred <- nimbleFunction(
     setup = function(model, params) {
         calcNodes <- model$getDependencies(params, determOnly = TRUE)
@@ -61,21 +61,21 @@ gpPred <- nimbleFunction(
         getC = function() { returnType(double(2)); return(C[, ]) }
     )
 )
-##```
+```
 
 
-##### GP model
+### GP model
 
-##GP model defined here.  Basically the same as your original, but I renamed some paramters more to my liking =)
+GP model defined here.  Basically the same as your original, but I renamed some paramters more to my liking =)
 
-##This is *not* as elegant as I had hoped.  It still requires repeating (essentially) the same code three times.  I discovered some limitations of NIMBLE while trying other approaches.
+This is *not* as elegant as I had hoped.  It still requires repeating (essentially) the same code three times.  I discovered some limitations of NIMBLE while trying other approaches.
 
-##Bottom line:
-##- This achieves relatively nice simplicity.
-##- There's an efficiency hit to the MCMC sampling, but it doesn't seem too bad.
-##- This works.
+Bottom line:
+- This achieves relatively nice simplicity.
+- There's an efficiency hit to the MCMC sampling, but it doesn't seem too bad.
+- This works.
 
-##```{r}
+```{r}
 code <- nimbleCode({
    rho ~ dgamma(10, 1)
    sigGP ~ dunif(0, 1e5)
@@ -91,78 +91,78 @@ data <- list(yObs = yObs)
 inits <- list(rho = 1, sigGP = 1, sigOE = 1)
 
 Rmodel <- nimbleModel(code, constants, data, inits)
-##```
+```
 
 
-##### Create, compile, and run
+### Create, compile, and run
 
-##```{r}
+```{r}
 
-#### MCMC specification with no samplers
+## MCMC specification with no samplers
 spec <- configureMCMC(Rmodel, nodes = NULL)
 
-#### this will be used for some checking, and setting up block sampler:
+## this will be used for some checking, and setting up block sampler:
 params <- Rmodel$getNodeNames(topOnly = TRUE)
 
-#### NOTE: the next line shouldn't work for you, since the MCMC API has changed.
-#### you can rebuild from source off nimble branch 'devel'.
-#### otherwise, using last public release of NIMBLE (0.3-1), use this line instead:
-#### spec$addSampler('RW_block', control = list(targetNodes = params))
+## NOTE: the next line shouldn't work for you, since the MCMC API has changed.
+## you can rebuild from source off nimble branch 'devel'.
+## otherwise, using last public release of NIMBLE (0.3-1), use this line instead:
+## spec$addSampler('RW_block', control = list(targetNodes = params))
 spec$addSampler(params, 'RW_block')
 
-#### We can debate about univariate vs. block sampling at some point
+## We can debate about univariate vs. block sampling at some point
 
-#### MCMC function
+## MCMC function
 Rmcmc <- buildMCMC(spec)
 
-#### GP prediction function
-#### also uses the 'params' variable for specialization
+## GP prediction function
+## also uses the 'params' variable for specialization
 Rpred <- gpPred(Rmodel, params)
 
-#### compile everything
+## compile everything
 Cmodel <- compileNimble(Rmodel)
 Cmcmc  <- compileNimble(Rmcmc, project = Rmodel)
 Cpred  <- compileNimble(Rpred, project = Rmodel)
 
-#### MCMC sampling
+## MCMC sampling
 set.seed(0)
 system.time(Cmcmc$run(100000))
 samples <- as.matrix(Cmcmc$mvSamples)
 
-#### quick check
+## quick check
 if(!identical(params, colnames(samples))) stop('problem')
 
-#### predict from GP model using posterior MCMC samples
+## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))
 
-#### extract predictions
-#### E and C self-explanatory
+## extract predictions
+## E and C self-explanatory
 E <- Cpred$getE()
 C <- Cpred$getC()
-##```
+```
 
 
 
-##### Output
+### Output
 
-##```{r}
+```{r}
 E
-##```
+```
 
-##```{r}
+```{r}
 diag(C)
-##```
+```
 
 
-##```{r echo=FALSE fig.width 4 fig.height 4}
+```{r echo=FALSE fig.width 4 fig.height 4}
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=19, col='red')
-####segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
-##```
+##segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
+```
 
-##Wield this new weapon carefully!
+Wield this new weapon carefully!
 
-##Happy to discuss data & applications anytime.
+Happy to discuss data & applications anytime.
 
 
 
