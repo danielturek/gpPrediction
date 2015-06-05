@@ -23,7 +23,7 @@ ind <- sort(sample(1:100, 40))
 ##```{r}
 xObs <- x[ind]                ## input
 yObs <- y[ind]                ## input
-xPred <- c(x, 101:200)        ## input
+xPred <- c(x, 101:120)        ## input
 ##```
 
 ##Some initial processing
