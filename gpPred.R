@@ -188,7 +188,7 @@ diag(C)
 
 ##Red lines are plus/minus one standard error
 
-##```{r echo=FALSE, fig.width=6, fig.height=6}
+##```{r echo=FALSE, fig.width=8, fig.height=6}
 plot(xObs, yObs, type='b', pch=19, xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=20, col='red')
 segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
