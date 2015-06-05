@@ -143,10 +143,13 @@ Cpred  <- compileNimble(Rpred, project = Rmodel)
 
 #### MCMC sampling
 system.time(Cmcmc$run(100000))
+##```
 
-#### about 20 seconds on my computer
-#### can be improved if necessary
+##About 20 seconds on my computer
 
+##That can be improved if necessary
+
+##```{r, message=FALSE}
 samples <- as.matrix(Cmcmc$mvSamples)
 
 #### quick check
@@ -154,12 +157,13 @@ if(!identical(params, colnames(samples))) stop('problem')
 
 #### predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))
+##```
 
-#### about 30 seconds on my computer
-#### again, could streamline the gpPred() function if necessary
+##About 30 seconds on my computer
+##Again, could streamline the gpPred() function if necessary
 
-#### extract predictions
-#### E and C self-explanatory
+##```{r, message=FALSE}
+#### extract predictions: E and C self-explanatory
 E <- Cpred$getE()
 C <- Cpred$getC()
 ##```
@@ -180,16 +184,17 @@ diag(C)
 
 ##Red dots are the predictions made at each 'xPred'
 
+##Red lines are plus/minus one standard error
+
 ##```{r echo=FALSE, fig.width=6, fig.height=6}
-plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
-points(xPred, E, pch=19, col='red')
+plot(xObs, yObs, type='b', pch=19, xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
+points(xPred, E, pch=20, col='red')
 segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
 ##```
 
 ##Wield this new weapon carefully!
 
 ##Happy to discuss data & applications anytime.
-
 
 
 
