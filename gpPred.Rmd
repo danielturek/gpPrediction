@@ -21,9 +21,9 @@ ind <- sort(sample(1:100, 40))
 The next three lines are the only inputs required.
 
 ```{r}
-xObs <- x[ind]    ## input
-yObs <- y[ind]    ## input
-xPred <- x        ## input
+xObs <- x[ind]                ## input
+yObs <- y[ind]                ## input
+xPred <- c(x, 101:120)        ## input
 ```
 
 Some initial processing
@@ -142,10 +142,11 @@ Cmcmc  <- compileNimble(Rmcmc, project = Rmodel)
 Cpred  <- compileNimble(Rpred, project = Rmodel)
 
 ## MCMC sampling
+## 100,000 iterations
 system.time(Cmcmc$run(100000))
 ```
 
-About 20 seconds on my computer
+About 25 seconds on my computer
 
 That can be improved if necessary
 
@@ -159,11 +160,12 @@ if(!identical(params, colnames(samples))) stop('problem')
 system.time(Cpred$run(samples))
 ```
 
-About 30 seconds on my computer
+About 40 seconds on my computer
+
 Again, could streamline the gpPred() function if necessary
 
 ```{r, message=FALSE}
-## extract predictions: E and C self-explanatory
+## extract predictions: E and C
 E <- Cpred$getE()
 C <- Cpred$getC()
 ```
