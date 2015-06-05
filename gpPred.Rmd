@@ -7,16 +7,27 @@ publish: true
 
 ```{r message=FALSE}
 library(nimble)
+set.seed(0)
 ```
 
-The first three lines are the only inputs required.
+Randomly generate some sinusoidal data
 
 ```{r}
-xObs <- c( 1,  3,  5,  7, 10, 15, 20)    ## input
-yObs <- c(10, 15, 18, 14, 20, 13, 19)    ## input
-xPred <- 1:20                            ## input
+x <- 1:100
+y <- sin(x/5) + rnorm(100, 0.1)
+ind <- sort(sample(1:100, 40))
+```
 
-## some processing
+The next three lines are the only inputs required.
+
+```{r}
+xObs <- x[ind]    ## input
+yObs <- y[ind]    ## input
+xPred <- x        ## input
+```
+
+Some initial processing
+```{r}
 nObs <- length(xObs)
 nPred <- length(xPred)
 f <- function(xi, xj) (xi-xj)^2
@@ -24,6 +35,7 @@ diffOO <- outer(xObs,  xObs,  f)
 diffPP <- outer(xPred, xPred, f)
 diffPO <- outer(xPred, xObs,  f)
 ```
+
 
 
 ### NIMBLE function for GP prediction
@@ -130,8 +142,11 @@ Cmcmc  <- compileNimble(Rmcmc, project = Rmodel)
 Cpred  <- compileNimble(Rpred, project = Rmodel)
 
 ## MCMC sampling
-set.seed(0)
 system.time(Cmcmc$run(100000))
+
+## about 20 seconds on my computer
+## can be improved if necessary
+
 samples <- as.matrix(Cmcmc$mvSamples)
 
 ## quick check
@@ -139,6 +154,9 @@ if(!identical(params, colnames(samples))) stop('problem')
 
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))
+
+## about 30 seconds on my computer
+## again, could streamline the gpPred() function if necessary
 
 ## extract predictions
 ## E and C self-explanatory
@@ -165,7 +183,7 @@ Red dots are the predictions made at each 'xPred'
 ```{r echo=FALSE, fig.width=6, fig.height=6}
 plot(xObs, yObs, type='b', xlim=range(c(xObs,xPred)), ylim=range(c(yObs,E)))
 points(xPred, E, pch=19, col='red')
-##segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
+segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
 ```
 
 Wield this new weapon carefully!
