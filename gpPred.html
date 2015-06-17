@@ -61,6 +61,12 @@ img {
 
 
 
+<div id="nimble-installation" class="section level3">
+<h3>NIMBLE Installation</h3>
+<p>Install from pre-release branch <code>devel</code></p>
+<pre class="r"><code>library(devtools)
+install_github('nimble-dev/nimble', ref = 'devel', subdir = 'packages/nimble')</code></pre>
+</div>
 <div id="setup" class="section level3">
 <h3>Setup</h3>
 <pre class="r"><code>library(nimble)
@@ -169,7 +175,7 @@ Cpred  &lt;- compileNimble(Rpred, project = Rmodel)
 ## 100,000 iterations
 system.time(Cmcmc$run(100000))</code></pre>
 <pre><code>##    user  system elapsed 
-##  25.644   0.028  25.672</code></pre>
+##  26.889   0.023  26.913</code></pre>
 <p>About 25 seconds on my computer</p>
 <p>That can be improved if necessary</p>
 <pre class="r"><code>samples &lt;- as.matrix(Cmcmc$mvSamples)
@@ -180,7 +186,7 @@ if(!identical(params, colnames(samples))) stop('problem')
 ## predict from GP model using posterior MCMC samples
 system.time(Cpred$run(samples))</code></pre>
 <pre><code>##    user  system elapsed 
-##  40.345   0.015  40.358</code></pre>
+##  40.999   0.017  41.027</code></pre>
 <p>About 40 seconds on my computer</p>
 <p>Again, could streamline the gpPred() function if necessary</p>
 <pre class="r"><code>## extract predictions: E and C

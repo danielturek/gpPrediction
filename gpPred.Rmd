@@ -3,6 +3,18 @@ publish: true
 ---
 
 
+### NIMBLE Installation
+
+Install from pre-release branch `devel`
+
+```{r message=FALSE}
+library(devtools)
+install_github('nimble-dev/nimble', ref = 'devel', subdir = 'packages/nimble')
+```
+
+
+
+
 ### Setup
 
 ```{r message=FALSE}
@@ -197,6 +209,7 @@ segments(x0=xPred, y0=E-sqrt(diag(C)), y1=E+sqrt(diag(C)), col='red')
 Wield this new weapon carefully!
 
 Happy to discuss data & applications anytime.
+
 
 
 
